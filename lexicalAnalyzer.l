@@ -17,7 +17,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string>
+#include <string.h>
 #include "Tokens.h"
 
 int line_number = 1;   // to track line numbers
@@ -36,19 +36,28 @@ NUM    {DIGIT}(\.)?{DIGIT}+((E|e)(\+|-)?{DIGIT}+)?
 WS     [ \t\r]+
 NEWLINE \n
 
+
 %%
 "Program" { currentToken.type = PROGRAM; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
-	    return currentToken;}
+
+printf(stdout, "Info: Line: %d | Position: %d\n | 1",
+        currentToken.line,
+        currentToken.position);
+
+	    return PROGRAM;}
 
 "else"    { currentToken.type = ELSE; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;
+printf(stdout, "Info: Line: %d | Position: %d\n | 2",
+        currentToken.line,
+        currentToken.position);
+	    return ELSE;
 	   }
 
 "if"      { currentToken.type = IF; 
@@ -56,28 +65,41 @@ NEWLINE \n
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 3",
+        currentToken.line,
+        currentToken.position);
+	    return IF;}
 
 "int"|"float"|"void"     { currentToken.type = TYPE; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 4",
+        currentToken.line,
+        currentToken.position);
+	    return TYPE;}
 
 "return"  { currentToken.type = RETURN; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 5",
+        currentToken.line,
+        currentToken.position);
+
+	    return RETURN;}
 
 "while"   { currentToken.type = WHILE; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;
+printf(stdout, "Info: Line: %d | Position: %d\n | 6",
+        currentToken.line,
+        currentToken.position);
+	    return WHILE;
            }
 
 [*/]        { currentToken.type = MULOP; 
@@ -85,28 +107,40 @@ NEWLINE \n
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 6",
+        currentToken.line,
+        currentToken.position);
+	    return MULOP;}
 
 [+\-]        {currentToken.type = ADDOP; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 6",
+        currentToken.line,
+        currentToken.position);
+	    return ADDOP;}
 
 ==|!=|<=|>= { currentToken.type = RELOP; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 7",
+        currentToken.line,
+        currentToken.position);
+	    return RELOP;}
 
 = {currentToken.type = ASSIGN; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 8",
+        currentToken.line,
+        currentToken.position);
+	    return ASSIGN;}
 
 
 ; { currentToken.type = SEMICOLON; 
@@ -114,56 +148,80 @@ NEWLINE \n
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 9",
+        currentToken.line,
+        currentToken.position);
+	    return SEMICOLON;}
 
 , {  currentToken.type = COMMA; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken; }
+printf(stdout, "Info: Line: %d | Position: %d\n | 10",
+        currentToken.line,
+        currentToken.position);
+	    return COMMA; }
 
 \( {  currentToken.type = OPEN_PAR; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 11",
+        currentToken.line,
+        currentToken.position);
+	    return OPEN_PAR;}
 
 \) { currentToken.type = CLOSED_PAR; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 12",
+        currentToken.line,
+        currentToken.position);
+	    return CLOSED_PAR;}
 
 \[ { currentToken.type = OPEN_SQUARE; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 13",
+        currentToken.line,
+        currentToken.position);
+	    return OPEN_SQUARE;}
 
 \] {  currentToken.type = CLOSED_SQUARE; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 14",
+        currentToken.line,
+        currentToken.position);
+	    return CLOSED_SQUARE;}
 
 "{" {currentToken.type = OPEN_CURL; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 15",
+        currentToken.line,
+        currentToken.position);
+	    return OPEN_CURL;}
 
 "}" {currentToken.type = CLOSED_CURL; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 16",
+        currentToken.line,
+        currentToken.position);
+	    return CLOSED_CURL;}
 
 
 {ID}      { currentToken.type = ID; 
@@ -171,24 +229,33 @@ NEWLINE \n
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 17",
+        currentToken.line,
+        currentToken.position);
+	    return ID;}
 
 {ID}[^0-9a-zA-Z \t\n]+ {currentToken.type = ERROR; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 18",
+        currentToken.line,
+        currentToken.position);
+	    return ERROR;}
 
 {NUM}     { currentToken.type = NUM; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 19",
+        currentToken.line,
+        currentToken.position);
+	    return NUM;}
 
 
-{NUM}{ID} { fprintf(token_file,"TOKEN TYPE: NUM ID, Lexeme: %s\n", yytext); char_position += yyleng;}
+{NUM}{ID} { printf("TOKEN TYPE: NUM ID, Lexeme: %s\n", yytext); char_position += yyleng;}
 
 
 {NUM}[a-zA-Z!@#$%&-="_]+ { currentToken.type = ERROR; 
@@ -196,7 +263,10 @@ NEWLINE \n
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+printf(stdout, "Info: Line: %d | Position: %d\n | 20",
+        currentToken.line,
+        currentToken.position);
+	    return ERROR;}
 
 {WS}      { char_position += yyleng; char_position += yyleng; } 
 {NEWLINE} { line_number++; char_position = 1; } 
@@ -213,20 +283,20 @@ NEWLINE \n
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken;}
+	    return ERROR;}
 
 [0-9]+[eE][+-]?[^0-9]+ {currentToken.type = ERROR; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken; }
+	    return ERROR; }
 
 . { currentToken.type = ERROR; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-	    return currentToken; }
+	    return ERROR; }
 %%
 
