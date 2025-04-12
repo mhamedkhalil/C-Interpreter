@@ -10,10 +10,23 @@ extern int line_number;   // to track line numbers
 extern int char_position; // to track character position
 extern FILE *yyin;
 
+// Functions Prototyping
+void program();
+void declaration_list();
+void statement_list();
+void declaration();
+void var_declaration();
+void type_specifier();
+void params();
+void param_list();
+
+
 void program() {
     if(lookahead.type == PROGRAM) {
         match(PROGRAM);
         match(ID);
+        match(OPEN_CURL);
+
     }
 }
 

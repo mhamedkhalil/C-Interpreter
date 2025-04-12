@@ -8,6 +8,7 @@ typedef enum {
     ELSE,        // "else"
     WHILE,       // "while"
     TYPE,        // "void", "int", "float"
+    RETURN,      // return
 
     // Identifiers and literals
     ID,          // Variable name
@@ -20,6 +21,8 @@ typedef enum {
     COMMA,        // ,
     OPEN_CURL,    // {
     CLOSED_CURL,  // }
+    OPEN_SQUARE,  // [
+    CLOSED_SQUARE,// ]
 
     // Operators
     ASSIGN,       // =
@@ -44,6 +47,7 @@ const char* get_token_type(TokenType token)
 {
     switch(token){
         case PROGRAM:      return "PROGRAM";
+        case RETURN:       return "RETURN";
         case IF:           return "IF";
         case ELSE:         return "ELSE";
         case WHILE:        return "WHILE";
@@ -54,6 +58,8 @@ const char* get_token_type(TokenType token)
         case CLOSED_PAR:   return "CLOSED_PAR";
         case OPEN_CURL:    return "OPEN_CURL";
         case CLOSED_CURL:  return "CLOSED_CURL";
+        case OPEN_SQUARE:  return "OPEN_SQUARE";
+        case CLOSED_SQUARE:  return "CLOSED_SQUARE";
         case SEMICOLON:    return "SEMICOLON";
         case COMMA:        return "COMMA";
         case ASSIGN:       return "ASSIGN";
