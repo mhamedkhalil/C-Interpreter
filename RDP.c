@@ -15,26 +15,20 @@ void program(); //
 void declaration_list(); //
 void statement_list(); //
 void var_declaration(); //
-void var_declaration_tail(); //
 void type_specifier(); //
 void params(); //
 void param_list(); //
-void param_list_tail(); //
 void param(); //
-void param_tail(); //
 void compound_stmt(); //
 void statement(); //
-void assignment_stmt();
-void selection_stmt();
-void iteration_stmt();
-void expression();
-void var();
-void relop();
-void additive_expression();
-void addop();
-void term();
-void mulop();
-void factor();
+void assignment_stmt(); //
+void selection_stmt(); //
+void iteration_stmt(); //
+void expression(); //
+void var(); //
+void additive_expression(); //
+void term(); //
+void factor(); //
 void match(TokenType expectedType);
 void syntax_error(const TokenType expected);
 
@@ -64,16 +58,11 @@ void var_declaration()
 {
     type_specifier();
     match(ID);
-    var_declaration_tail();   
-}
-
-void var_declaration_tail()
-{
     switch(lookahead.type) {
         case SEMICOLON: match(SEMICOLON); break;
         case OPEN_SQUARE: match(OPEN_SQUARE); match(NUM); match(CLOSED_SQUARE); match(SEMICOLON); break;
         default: syntax_error(SEMICOLON);
-    }
+    }   
 }
 
 void type_specifier()
@@ -100,11 +89,6 @@ void params()
 void param_list()
 {
     param();
-    param_list_tail();
-}
-
-void param_list_tail()
-{
     while(lookahead.type == COMMA)
     {
         match(COMMA);
@@ -116,15 +100,10 @@ void param()
 {
     type_specifier();
     match(ID);
-    param_tail();
-}
-
-void param_tail()
-{
     if(lookahead.type == OPEN_SQUARE)
     {
-        match(OPEN_CURL);
-        match(CLOSED_CURL);
+        match(OPEN_SQUARE);
+        match(CLOSED_SQUARE);
     }
 }
 
@@ -146,7 +125,96 @@ void statement_list()
 
 void statement()
 {
+    switch(lookahead.type) {
+        case ID: assignment_stmt(); break;
+        case OPEN_CURL: compound_stmt(); break;
+        case IF: selection_stmt(); break;
+        case WHILE: iteration_stmt(); break;
+        default: syntax_error(ID);
+    }
+}
 
+void assignment_stmt()
+{
+    var();
+    match(ASSIGN);
+    expression();
+    match(SEMICOLON);
+}
+
+void selection_stmt()
+{
+    match(IF); 
+    match(OPEN_PAR);
+    expression();
+    match(CLOSED_PAR);
+    statement();
+
+    if(lookahead.type == ELSE)
+    {
+        match(ELSE);
+        statement();
+    }
+}
+
+void iteration_stmt()
+{
+    match(WHILE);
+    match(OPEN_PAR);
+    expression();
+    match(CLOSED_PAR);
+    statement();
+}
+
+void var()
+{
+    match(ID);
+    if(lookahead.type == OPEN_SQUARE)
+    {
+        match(OPEN_SQUARE);
+        expression();
+        match(CLOSED_SQUARE);
+    }
+}
+
+void expression()
+{
+    additive_expression();
+    while(lookahead.type == RELOP)
+    {
+        match(RELOP);
+        additive_expression();
+    }
+}
+
+void additive_expression()
+{
+    term();
+    while(lookahead.type == ADDOP)
+    {
+        match(ADDOP);
+        term();
+    }
+}
+
+void term()
+{
+    factor();
+    while(lookahead.type == MULOP)
+    {
+        match(MULOP);
+        factor();
+    }
+}
+
+void factor()
+{
+    switch(lookahead.type) {
+        case OPEN_PAR: match(OPEN_PAR); expression(); match(CLOSED_PAR); break;
+        case ID: var(); break;
+        case NUM: match(NUM); break;
+        default: syntax_error(ID);
+    }
 }
 
 void match(TokenType expectedType) {
