@@ -43,7 +43,7 @@ NEWLINE \n
             currentToken.line = line_number;
             currentToken.position = char_position;
 
-printf(stdout, "Info: Line: %d | Position: %d\n | 1",
+printf("Info: Line: %d | Position: %d | 1 \n",
         currentToken.line,
         currentToken.position);
 
@@ -54,7 +54,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 1",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 2",
+printf("Info: Line: %d | Position: %d | 2 \n",
         currentToken.line,
         currentToken.position);
 	    return ELSE;
@@ -65,7 +65,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 2",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 3",
+printf("Info: Line: %d | Position: %d | 3 \n",
         currentToken.line,
         currentToken.position);
 	    return IF;}
@@ -75,7 +75,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 3",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 4",
+printf("Info: Line: %d | Position: %d | 4 \n",
         currentToken.line,
         currentToken.position);
 	    return TYPE;}
@@ -85,7 +85,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 4",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 5",
+printf("Info: Line: %d | Position: %d | 5 \n",
         currentToken.line,
         currentToken.position);
 
@@ -96,7 +96,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 5",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 6",
+printf("Info: Line: %d | Position: %d | 6 \n",
         currentToken.line,
         currentToken.position);
 	    return WHILE;
@@ -107,7 +107,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 6",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 6",
+printf("Info: Line: %d | Position: %d | 7 \n",
         currentToken.line,
         currentToken.position);
 	    return MULOP;}
@@ -117,17 +117,17 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 6",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 6",
+printf("Info: Line: %d | Position: %d | 8 \n",
         currentToken.line,
         currentToken.position);
 	    return ADDOP;}
 
-==|!=|<=|>= { currentToken.type = RELOP; 
+==|!=|<=|>=|>|< { currentToken.type = RELOP; 
 	    strcpy(currentToken.lexeme, yytext);
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 7",
+printf("Info: Line: %d | Position: %d | 9 \n",
         currentToken.line,
         currentToken.position);
 	    return RELOP;}
@@ -137,7 +137,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 7",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 8",
+printf("Info: Line: %d | Position: %d | 10 \n",
         currentToken.line,
         currentToken.position);
 	    return ASSIGN;}
@@ -148,7 +148,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 8",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 9",
+printf("Info: Line: %d | Position: %d | 11 \n",
         currentToken.line,
         currentToken.position);
 	    return SEMICOLON;}
@@ -158,7 +158,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 9",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 10",
+printf("Info: Line: %d | Position: %d | 12 \n",
         currentToken.line,
         currentToken.position);
 	    return COMMA; }
@@ -168,7 +168,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 10",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 11",
+printf("Info: Line: %d | Position: %d | 13 \n",
         currentToken.line,
         currentToken.position);
 	    return OPEN_PAR;}
@@ -178,7 +178,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 11",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 12",
+printf("Info: Line: %d | Position: %d | 14 \n",
         currentToken.line,
         currentToken.position);
 	    return CLOSED_PAR;}
@@ -188,7 +188,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 12",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 13",
+printf("Info: Line: %d | Position: %d | 15 \n",
         currentToken.line,
         currentToken.position);
 	    return OPEN_SQUARE;}
@@ -198,7 +198,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 13",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 14",
+printf("Info: Line: %d | Position: %d | 16 \n",
         currentToken.line,
         currentToken.position);
 	    return CLOSED_SQUARE;}
@@ -208,7 +208,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 14",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 15",
+printf("Info: Line: %d | Position: %d | 17 \n",
         currentToken.line,
         currentToken.position);
 	    return OPEN_CURL;}
@@ -218,7 +218,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 15",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 16",
+printf("Info: Line: %d | Position: %d | 18 \n",
         currentToken.line,
         currentToken.position);
 	    return CLOSED_CURL;}
@@ -229,7 +229,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 16",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 17",
+printf("Info: Line: %d | Position: %d | 19 \n",
         currentToken.line,
         currentToken.position);
 	    return ID;}
@@ -239,7 +239,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 17",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 18",
+printf("Info: Line: %d | Position: %d | 20 \n",
         currentToken.line,
         currentToken.position);
 	    return ERROR;}
@@ -249,11 +249,10 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 18",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 19",
+printf("Info: Line: %d | Position: %d | 21 \n",
         currentToken.line,
         currentToken.position);
 	    return NUM;}
-
 
 {NUM}{ID} { printf("TOKEN TYPE: NUM ID, Lexeme: %s\n", yytext); char_position += yyleng;}
 
@@ -263,7 +262,7 @@ printf(stdout, "Info: Line: %d | Position: %d\n | 19",
             currentToken.line = line_number;
             currentToken.position = char_position;
             char_position += yyleng; 
-printf(stdout, "Info: Line: %d | Position: %d\n | 20",
+printf("Info: Line: %d | Position: %d | 22 \n",
         currentToken.line,
         currentToken.position);
 	    return ERROR;}
