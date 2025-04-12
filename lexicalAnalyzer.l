@@ -8,12 +8,22 @@
 // Case sensitive 
 // whitespaces should be ignored and seperate tokens (include \n \t and blank)  
 
+//Changes
+// Each keyword returns unique token
+// Each special symbol is grouped with its kind (addop, relop, mulop..)
+// Brackets have been separated into different types and tokens
+// ID and NUM remain the same
+// All errors have been given the token- ERROR
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
+#include "Tokens.h"
 
 int line_number = 1;   // to track line numbers
 int char_position = 1; // to track character position
 
+Token currentToken;
 %}
 
 %x COMMENT_STATE 
@@ -27,24 +37,166 @@ WS     [ \t\r]+
 NEWLINE \n
 
 %%
-"Program" { return PROGRAM; }
-"else"    { return KEYWORD; char_position += yyleng;}
-"if"      { return KEYWORD; char_position += yyleng;}
-"int"     { return TYPE; char_position += yyleng;}
-"float"   { return TYPE; char_position += yyleng;}
-"void"    { return TYPE; char_position += yyleng;}
-"return"  { return KEYWORD; char_position += yyleng;}
-"while"   { return KEYWORD; char_position += yyleng;}
+"Program" { currentToken.type = PROGRAM; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+	    return currentToken;}
 
-[+\-*/<>]|==|!=|=|<=|>=  { fprintf(token_file,"TOKEN TYPE: OPERATOR, Lexeme: %s\n", yytext); char_position += yyleng;}
-[;,\(\)\[\]{}] { fprintf(token_file,"TOKEN TYPE: SYMBOL, Lexeme: %s\n", yytext); char_position += yyleng;}
+"else"    { currentToken.type = ELSE; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;
+	   }
 
-{ID}      { fprintf(token_file,"TOKEN TYPE: ID, Lexeme: %s\n", yytext); char_position += yyleng;}
-{ID}[^0-9a-zA-Z \t\n]+ {printf("TOKEN TYPE: Wrong ID, Lexeme: %s at line %d, position %d\n", yytext, line_number, char_position); char_position += yyleng;}
+"if"      { currentToken.type = IF; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
 
-{NUM}     { fprintf(token_file,"TOKEN TYPE: NUM, Lexeme: %s\n", yytext); char_position += yyleng;}
+"int"|"float"|"void"     { currentToken.type = TYPE; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+"return"  { currentToken.type = RETURN; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+"while"   { currentToken.type = WHILE; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;
+           }
+
+[*/]        { currentToken.type = MULOP; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+[+\-]        {currentToken.type = ADDOP; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+==|!=|<=|>= { currentToken.type = RELOP; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+= {currentToken.type = ASSIGN; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+
+; { currentToken.type = SEMICOLON; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+, {  currentToken.type = COMMA; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken; }
+
+\( {  currentToken.type = OPEN_PAR; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+\) { currentToken.type = CLOSED_PAR; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+\[ { currentToken.type = OPEN_SQUARE; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+\] {  currentToken.type = CLOSED_SQUARE; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+"{" {currentToken.type = OPEN_CURL; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+"}" {currentToken.type = CLOSED_CURL; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+
+{ID}      { currentToken.type = ID; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+{ID}[^0-9a-zA-Z \t\n]+ {currentToken.type = ERROR; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+{NUM}     { currentToken.type = NUM; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+
 {NUM}{ID} { fprintf(token_file,"TOKEN TYPE: NUM ID, Lexeme: %s\n", yytext); char_position += yyleng;}
-{NUM}[a-zA-Z!@#$%&-="_]+ { printf("TOKEN TYPE: Wrong NUM, Lexeme: %s at line %d, position %d\n", yytext, line_number, char_position); char_position += yyleng;}
+
+
+{NUM}[a-zA-Z!@#$%&-="_]+ { currentToken.type = ERROR; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
 
 {WS}      { char_position += yyleng; char_position += yyleng; } 
 {NEWLINE} { line_number++; char_position = 1; } 
@@ -56,8 +208,25 @@ NEWLINE \n
 <COMMENT_STATE>"*/"         { BEGIN(INITIAL); }
 <COMMENT_STATE><<EOF>>      { printf("ERROR: Unclosed comment at line %d, position %d\n", line_number, char_position); exit(1); }
 
-[a-zA-Z]#([^a-zA-Z0-9]*) { printf("ERROR: Invalid identifier '%s' at line %d, position %d\n", yytext, line_number, char_position); char_position += yyleng; }
-[0-9]+[eE][+-]?[^0-9]+ { printf("ERROR: Invalid number format '%s' at line %d, position %d\n", yytext, line_number, char_position); char_position += yyleng; }
-. { printf("ERROR: Unknown character '%s' at line %d, position %d\n", yytext, line_number, char_position); char_position += yyleng; }
+[a-zA-Z]#([^a-zA-Z0-9]*) { currentToken.type = ERROR; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken;}
+
+[0-9]+[eE][+-]?[^0-9]+ {currentToken.type = ERROR; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken; }
+
+. { currentToken.type = ERROR; 
+	    strcpy(currentToken.lexeme, yytext);
+            currentToken.line = line_number;
+            currentToken.position = char_position;
+            char_position += yyleng; 
+	    return currentToken; }
 %%
 
