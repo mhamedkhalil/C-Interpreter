@@ -1,24 +1,28 @@
 %{
-// Keywords: if, else, int, return, void, while
-// Special Symbols: + - * / < <= > >= == != = ; , ( ) [ ] { } /* */
-// ID = letter (letter | digit)* ((“@”|”$” | “_”)? Digit+)?
-// NUM = digit (“.”)? digit+((E |e) (+|-)? digit+)?
-// letter = a|...|z|A|...|Z
-// digit = 0|...|9
-// Case sensitive 
-// whitespaces should be ignored and seperate tokens (include \n \t and blank)  
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "Tokens.h"
 
-int line_number = 1;   // to track line numbers
-int char_position = 1; // to track character position
+int line_number = 1;
+int char_position = 1;
 
+Token currentToken;
+
+void make_token(TokenType type) {
+    currentToken.type = type;
+    strcpy(currentToken.lexeme, yytext);
+    currentToken.line = line_number;
+    currentToken.position = char_position;
+    char_position += yyleng;
+    printf("TOKEN: %-14s | Line: %d | Pos: %d | Lexeme: %s\n", 
+        get_token_type(type), currentToken.line, currentToken.position, currentToken.lexeme);
+}
 %}
 
-%x COMMENT_STATE 
+%x COMMENT_STATE
+%option noyywrap
 
-%option noyywrap 
 DIGIT  [0-9]
 LETTER [a-zA-Z]
 ID     {LETTER}({LETTER}|{DIGIT})*(("@"|"$"|"_")?{DIGIT}+)?
@@ -27,37 +31,47 @@ WS     [ \t\r]+
 NEWLINE \n
 
 %%
-"Program" { return PROGRAM; }
-"else"    { return KEYWORD; char_position += yyleng;}
-"if"      { return KEYWORD; char_position += yyleng;}
-"int"     { return TYPE; char_position += yyleng;}
-"float"   { return TYPE; char_position += yyleng;}
-"void"    { return TYPE; char_position += yyleng;}
-"return"  { return KEYWORD; char_position += yyleng;}
-"while"   { return KEYWORD; char_position += yyleng;}
 
-[+\-*/<>]|==|!=|=|<=|>=  { fprintf(token_file,"TOKEN TYPE: OPERATOR, Lexeme: %s\n", yytext); char_position += yyleng;}
-[;,\(\)\[\]{}] { fprintf(token_file,"TOKEN TYPE: SYMBOL, Lexeme: %s\n", yytext); char_position += yyleng;}
+"Program"           { make_token(PROGRAM); return PROGRAM; }
+"if"                { make_token(IF); return IF; }
+"else"              { make_token(ELSE); return ELSE; }
+"while"             { make_token(WHILE); return WHILE; }
+"return"            { make_token(RETURN); return RETURN; }
+"int"|"float"|"void" { make_token(TYPE); return TYPE; }
 
-{ID}      { fprintf(token_file,"TOKEN TYPE: ID, Lexeme: %s\n", yytext); char_position += yyleng;}
-{ID}[^0-9a-zA-Z \t\n]+ {printf("TOKEN TYPE: Wrong ID, Lexeme: %s at line %d, position %d\n", yytext, line_number, char_position); char_position += yyleng;}
+[+\-]               { make_token(ADDOP); return ADDOP; }
+[*/]                { make_token(MULOP); return MULOP; }
+==|!=|<=|>=|>|<     { make_token(RELOP); return RELOP; }
+=                   { make_token(ASSIGN); return ASSIGN; }
 
-{NUM}     { fprintf(token_file,"TOKEN TYPE: NUM, Lexeme: %s\n", yytext); char_position += yyleng;}
-{NUM}{ID} { fprintf(token_file,"TOKEN TYPE: NUM ID, Lexeme: %s\n", yytext); char_position += yyleng;}
-{NUM}[a-zA-Z!@#$%&-="_]+ { printf("TOKEN TYPE: Wrong NUM, Lexeme: %s at line %d, position %d\n", yytext, line_number, char_position); char_position += yyleng;}
+;                   { make_token(SEMICOLON); return SEMICOLON; }
+,                   { make_token(COMMA); return COMMA; }
+"("                 { make_token(OPEN_PAR); return OPEN_PAR; }
+")"                 { make_token(CLOSED_PAR); return CLOSED_PAR; }
+"["                 { make_token(OPEN_SQUARE); return OPEN_SQUARE; }
+"]"                 { make_token(CLOSED_SQUARE); return CLOSED_SQUARE; }
+"{"                 { make_token(OPEN_CURL); return OPEN_CURL; }
+"}"                 { make_token(CLOSED_CURL); return CLOSED_CURL; }
+{WS}                { char_position += yyleng; }
+{NEWLINE}           { line_number++; char_position = 1; }
+{ID}                { make_token(ID); return ID; }
 
-{WS}      { char_position += yyleng; char_position += yyleng; } 
-{NEWLINE} { line_number++; char_position = 1; } 
 
-"/*"                        { BEGIN(COMMENT_STATE); }
-<COMMENT_STATE>{NEWLINE}    { line_number++; char_position=1; }
-<COMMENT_STATE>[^*\n]*        { } 
-<COMMENT_STATE>"*"+[^*/\n]    { } 
+{NUM}               { make_token(NUM); return NUM; }
+{NUM}[a-zA-Z_]+ { make_token(ERROR); return ERROR; }
+
+"/*"                { BEGIN(COMMENT_STATE); }
+<COMMENT_STATE>{NEWLINE}    { line_number++; char_position = 1; }
+<COMMENT_STATE>[^*\n]*      { }
+<COMMENT_STATE>"*"+[^*/\n]  { }
 <COMMENT_STATE>"*/"         { BEGIN(INITIAL); }
-<COMMENT_STATE><<EOF>>      { printf("ERROR: Unclosed comment at line %d, position %d\n", line_number, char_position); exit(1); }
+<COMMENT_STATE><<EOF>>      { 
+    fprintf(stderr, "ERROR: Unclosed comment at line %d, pos %d\n", line_number, char_position);
+    exit(1); 
+}
 
-[a-zA-Z]#([^a-zA-Z0-9]*) { printf("ERROR: Invalid identifier '%s' at line %d, position %d\n", yytext, line_number, char_position); char_position += yyleng; }
-[0-9]+[eE][+-]?[^0-9]+ { printf("ERROR: Invalid number format '%s' at line %d, position %d\n", yytext, line_number, char_position); char_position += yyleng; }
-. { printf("ERROR: Unknown character '%s' at line %d, position %d\n", yytext, line_number, char_position); char_position += yyleng; }
+[a-zA-Z]#([^a-zA-Z0-9]*)    { make_token(ERROR); return ERROR; }
+[0-9]+[eE][+-]?[^0-9]+      { make_token(ERROR); return ERROR; }
+.                           { make_token(ERROR); return ERROR; }
+
 %%
-

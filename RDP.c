@@ -3,12 +3,13 @@
 #include <string.h>
 #include <ctype.h>
 #include "Tokens.h"
+#include "lex.yy.c"
 
 Token lookahead;
-extern Token yylex();
-extern int line_number;   // to track line numbers
-extern int char_position; // to track character position
+extern int yylex();
+extern Token currentToken;
 extern FILE *yyin;
+int state;
 
 // Functions Prototyping
 void program(); //
@@ -69,7 +70,7 @@ void type_specifier()
 {
     if(lookahead.type == TYPE)
     {
-        if(lookahead.lexeme == "int" || lookahead.lexeme == "float")
+        if (strcmp(lookahead.lexeme, "int") == 0 || strcmp(lookahead.lexeme, "float") == 0)
             match(TYPE);
         else 
             syntax_error(TYPE);
@@ -219,7 +220,8 @@ void factor()
 
 void match(TokenType expectedType) {
     if (lookahead.type == expectedType) {
-        lookahead = yylex();  
+        state = yylex();
+        lookahead = currentToken;  
     } 
     else {
         syntax_error(expectedType);
@@ -227,13 +229,27 @@ void match(TokenType expectedType) {
 }
 
 void syntax_error(const TokenType expected) {
+    printf("Lookahead Token:%s\n",lookahead.lexeme);
     fprintf(stderr, "Syntax error at line %d, pos %d: expected %s but found '%s'\n",
             lookahead.line, lookahead.position, get_token_type(expected), get_token_type(lookahead.type));
     exit(1);
 }
 
-int main() 
+int main(int argc, char **argv) 
 {
-    lookahead = yylex();
+    if (argc > 1) {
+        FILE *infile = fopen(argv[1], "r");
+        if (!infile) {
+            perror("Error opening file");
+            return 1;
+        }
+        yyin = infile;
+    }
+    state = yylex();
+    lookahead = currentToken;
+    program();
+    printf("State:%d\n",state);
+    if(state == 0)
+        printf("Parsing was successful!\n");
     return 0;
 }
