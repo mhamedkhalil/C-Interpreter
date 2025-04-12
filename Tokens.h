@@ -18,6 +18,8 @@ typedef enum {
     CLOSED_PAR,   // )
     SEMICOLON,    // ;
     COMMA,        // ,
+    OPEN_CURL,    // {
+    CLOSED_CURL,  // }
 
     // Operators
     ASSIGN,       // =
@@ -50,6 +52,8 @@ const char* get_token_type(TokenType token)
         case NUM:          return "NUM";
         case OPEN_PAR:     return "OPEN_PAR";
         case CLOSED_PAR:   return "CLOSED_PAR";
+        case OPEN_CURL:    return "OPEN_CURL";
+        case CLOSED_CURL:  return "CLOSED_CURL";
         case SEMICOLON:    return "SEMICOLON";
         case COMMA:        return "COMMA";
         case ASSIGN:       return "ASSIGN";
@@ -57,7 +61,6 @@ const char* get_token_type(TokenType token)
         case ADDOP:        return "ADDOP";
         case MULOP:        return "MULOP";
         case END_OF_FILE:  return "EOF";
-        case ERROR:        return "ERROR";
         default:           return "UNKNOWN_TOKEN";
     }
 }

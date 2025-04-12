@@ -13,6 +13,7 @@ extern FILE *yyin;
 void program() {
     if(lookahead.type == PROGRAM) {
         match(PROGRAM);
+        match(ID);
     }
 }
 
@@ -21,13 +22,13 @@ void match(TokenType expectedType) {
         lookahead = yylex();  
     } 
     else {
-        syntax_error(&expectedType);
+        syntax_error(expectedType);
     }
 }
 
-void syntax_error(const TokenType *expected) {
+void syntax_error(const TokenType expected) {
     fprintf(stderr, "Syntax error at line %d, pos %d: expected %s but found '%s'\n",
-            lookahead.line, lookahead.position, expected, lookahead.lexeme);
+            lookahead.line, lookahead.position, get_token_type(expected), get_token_type(lookahead.type));
     exit(1);
 }
 
