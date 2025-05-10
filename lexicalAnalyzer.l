@@ -26,7 +26,7 @@ void make_token(TokenType type) {
 DIGIT  [0-9]
 LETTER [a-zA-Z]
 ID     {LETTER}({LETTER}|{DIGIT})*(("@"|"$"|"_")?{DIGIT}+)?
-NUM    {DIGIT}(\.)?{DIGIT}+((E|e)(\+|-)?{DIGIT}+)?
+NUM    {DIGIT}+(\.{DIGIT}+)?([Ee][+-]?{DIGIT}+)?
 WS     [ \t\r]+
 NEWLINE \n
 

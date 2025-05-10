@@ -1,7 +1,7 @@
-Program typeMismatch {
-    int x;
-    float y;
-    x = 95;
-    y = 2.5;
-    x = x + y;
+Program whileProg {
+    float a;
+    int z;
+    while (i < 100) { 
+        i = i + 15;
+    }
 }
